@@ -19,7 +19,7 @@ static const char *TAG = "example";
 /* Use project configuration menu (idf.py menuconfig) to choose the GPIO to blink,
    or you can edit the following line and set a number here.
 */
-#define BLINK_GPIO CONFIG_BLINK_GPIO
+#define BLINK_GPIO 13//CONFIG_BLINK_GPIO
 
 static uint8_t s_led_state = 0;
 
@@ -49,10 +49,19 @@ static void configure_led(void)
     pStrip_a->clear(pStrip_a, 50);
 }
 
+/*
+Blink menggunakan led biasa (bukan RMT/RGB).
+3 Algoritma dasar. Mirip dengan algoritma blink di python raspi
+
+250421
+Blink dipakai untuk membuktikan poin write.
+Readnya menggunakan hubungan antara raspi dan esp (read-write).
+*/
 #elif CONFIG_BLINK_LED_GPIO
 
 static void blink_led(void)
 {
+    ESP_LOGI(TAG, "Menjalankan yang ini %d", s_led_state);
     /* Set the GPIO level according to the state (LOW or HIGH)*/
     gpio_set_level(BLINK_GPIO, s_led_state);
 }
@@ -67,6 +76,12 @@ static void configure_led(void)
 
 #endif
 
+#ifdef CORE_DEBUG_LEVEL
+#undef CORE_DEBUG_LEVEL
+#endif
+
+#define CORE_DEBUG_LEVEL 3
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 void app_main(void)
 {
 
@@ -74,10 +89,11 @@ void app_main(void)
     configure_led();
 
     while (1) {
-        ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
+        ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "HIDUP" : "MATI");
         blink_led();
         /* Toggle the LED state */
         s_led_state = !s_led_state;
-        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        // vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS / 10);
     }
 }
