@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_log.h"
+
 #include "driver/uart.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
@@ -64,8 +66,9 @@ static void echo_task(void *arg)
     while (1) {
         // Read data from the UART
         int len = uart_read_bytes(ECHO_UART_PORT_NUM, data, BUF_SIZE, 20 / portTICK_RATE_MS);
+        ESP_LOGI("UART", "data -> %s",data);
         // Write data back to the UART
-        uart_write_bytes(ECHO_UART_PORT_NUM, (const char *) data, len);
+        //uart_write_bytes(ECHO_UART_PORT_NUM, (const char *) data, len);
     }
 }
 

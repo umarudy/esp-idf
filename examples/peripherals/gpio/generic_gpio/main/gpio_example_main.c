@@ -109,7 +109,7 @@ void app_main(void)
     while(1) {
         printf("cnt: %d\n", cnt++);
         vTaskDelay(1000 / portTICK_RATE_MS);
-        gpio_set_level(GPIO_OUTPUT_IO_0, cnt % 2);
-        gpio_set_level(GPIO_OUTPUT_IO_1, cnt % 2);
+        //gpio_set_level(GPIO_OUTPUT_IO_0, cnt % 2);
+        //gpio_set_level(GPIO_OUTPUT_IO_1, cnt % 2);
     }
 }
